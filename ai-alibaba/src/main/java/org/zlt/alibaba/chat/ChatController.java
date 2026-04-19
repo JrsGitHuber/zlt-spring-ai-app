@@ -6,7 +6,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.prompt.PromptTemplate;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.MediaType;
+import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -68,9 +71,14 @@ public class ChatController {
             model = "deepseek-v3";
         }
         input = URLDecoder.decode(input, StandardCharsets.UTF_8);
-        return chatClient.prompt().user(input)
+        return chatClient.prompt()
+//                .user(input)
+                .user(u -> u
+                        .text("请描述这张图片的内容")
+                        .media(MimeTypeUtils.IMAGE_PNG, new FileSystemResource("C:\\Users\\Administrator\\Desktop\\图纸.png")) // 传入图片
+                )
                 .system(s -> s.param("current_date", LocalDate.now().toString()))
-                .options(DashScopeChatOptions.builder().withModel(model).build())
+                .options(DashScopeChatOptions.builder().withModel(model).withMultiModel(true).build())
                 .call()
                 .content();
     }
