@@ -74,8 +74,8 @@ public class ChatController {
         return chatClient.prompt()
 //                .user(input)
                 .user(u -> u
-                        .text("请描述这张图片的内容")
-                        .media(MimeTypeUtils.IMAGE_PNG, new FileSystemResource("C:\\Users\\Administrator\\Desktop\\图纸.png")) // 传入图片
+                        .text("图片内容列表化")
+                        .media(MimeTypeUtils.IMAGE_PNG, new FileSystemResource("/Users/jr/Pictures/图片1.png")) // 传入图片
                 )
                 .system(s -> s.param("current_date", LocalDate.now().toString()))
                 .options(DashScopeChatOptions.builder().withModel(model).withMultiModel(true).build())
