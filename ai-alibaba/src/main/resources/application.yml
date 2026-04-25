@@ -8,3 +8,24 @@ spring:
 #      base-url: https://dashscope.aliyuncs.com/compatible-mode/v1
   main:
     allow-circular-references: true
+  datasource:
+    url: jdbc:mysql://192.168.227.135:3306/uds_workflow?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 20
+      idle-timeout: 300000
+      max-lifetime: 1200000
+      connection-timeout: 20000
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+  global-config:
+    db-config:
+      id-type: assign_uuid
+      table-prefix: ""
+  mapper-locations: classpath*:/mapper/**/*.xml
