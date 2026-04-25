@@ -53,6 +53,14 @@ public class MyDrawingController {
     }
 
     /**
+     * 批量新增图纸
+     */
+    @PostMapping("/batchSave")
+    public boolean batchSave(@RequestBody List<MyDrawing> drawingList) {
+        return myDrawingService.saveBatch(drawingList);
+    }
+
+    /**
      * 更新图纸
      */
     @PutMapping("/update")
