@@ -2,11 +2,13 @@ package org.zlt.alibaba.controller.db;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.zlt.alibaba.entity.MyDrawing;
 import org.zlt.alibaba.service.MyDrawingService;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 图纸信息表 Controller
@@ -17,6 +19,9 @@ public class MyDrawingController {
 
     @Autowired
     private MyDrawingService myDrawingService;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     /**
      * 查询所有图纸
@@ -74,5 +79,17 @@ public class MyDrawingController {
     @DeleteMapping("/{id}")
     public boolean delete(@PathVariable String id) {
         return myDrawingService.removeById(id);
+    }
+
+    /**
+     * 执行SQL查询（仅支持SELECT语句）
+     */
+    @PostMapping("/queryBySql")
+    public List<Map<String, Object>> queryBySql(@RequestBody String sql) {
+        String trimmedSql = sql.trim();
+        if (!trimmedSql.toLowerCase().startsWith("select")) {
+            throw new IllegalArgumentException("仅支持SELECT查询语句");
+        }
+        return jdbcTemplate.queryForList(trimmedSql);
     }
 }
