@@ -7,8 +7,10 @@ import org.springframework.web.bind.annotation.*;
 import org.zlt.alibaba.entity.MyDrawing;
 import org.zlt.alibaba.service.MyDrawingService;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 图纸信息表 Controller
@@ -91,5 +93,28 @@ public class MyDrawingController {
             throw new IllegalArgumentException("仅支持SELECT查询语句");
         }
         return jdbcTemplate.queryForList(trimmedSql);
+    }
+
+    /**
+     * 过滤JSON中的空值
+     */
+    @PostMapping("/filterEmpty")
+    public String filterEmpty(@RequestBody Map<String, String> jsonMap) {
+        LinkedHashMap<String, String> map =  jsonMap.entrySet().stream()
+                .filter(entry -> entry.getValue() != null && !"".equals(entry.getValue()))
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (v1, v2) -> v1,
+                        LinkedHashMap::new
+                ));
+
+        String result = map.entrySet()
+                .stream()
+                .map(entry -> entry.getKey() + "：" + entry.getValue())
+                .collect(Collectors.joining("\n"));
+
+        System.out.println(result);
+        return result;
     }
 }
